@@ -1,0 +1,77 @@
+/*
+ *思想要点，每趟选一个值，来把要排序的数组划分（通过在本数组中原地交换达到）成三个区
+ *较小区 被比较值区  较大区（使得宏观上已经基本有序了）
+ *递归调用，分而治之 ，最终的结果就是全部有序
+ */
+public class QuiklySort {
+	public static void main(String[] args) {
+		int[] arr = { 2, 8, 7, 1, 3, 5, 6, 4 };
+		QuiklySort qs = new QuiklySort();
+		//创建一个数型的随机数组
+		arr  = qs.createArray(100000);
+		long start = System.currentTimeMillis();
+		//开始执行排序，但如递归深度较深  在百万至千万级别的数据时可能发生栈溢出
+		qs.quckSort(arr, 0, arr.length-1);
+		long end = System.currentTimeMillis();
+		System.out.println("耗时："+(end - start)+"毫秒");
+		//测试输出，但数据量较大时不建议输出
+		//qs.printResult(arr);
+	}
+
+	public void quckSort(int[] arr, int p, int r) {
+		//p==r 时只有一个元素本身有序，开始回溯
+		if (p < r) {
+			//执行一趟比较
+			int q = partitionSort(arr, p, r);
+			//再次细分较小区，注意，上次被比较值不在参与比较
+			quckSort(arr, p, q-1);
+			//再次细分较大区
+			quckSort(arr, q+1 , r);
+		}else{
+			return;
+		}
+		
+	}
+	/**
+	 * 
+	 * @param arr,要比较的总序列，
+	 * @param p,当前子序列的起始值
+	 * @param r,当前子序列的终点值
+	 * 将有四个不同性质的区域产生（可能为空）较小区 较大区 未比较区 被比较的值
+	 */
+	public int partitionSort(int[] arr, int p, int r) {
+		//取一个序列的末位值给x作为其他数的比较值
+		int x = arr[r];
+		//i用来指向较小区的最后一个 i+1 将指向较大区
+		int i = p - 1;
+		//末位值是比较的数，单独在一个区
+		for (int j = p; j <= r - 1; j++) {
+			if (arr[j] <= x) {
+				i++;//较小区往后1个位置，把较小的数换入较小区
+				int temp = arr[j];
+				arr[j] = arr[i];
+				arr[i] = temp;
+			}
+		}
+		//被比较的数最后置换，并返回该位置，之后数组只有较小区 被比较值 和较大区
+		int temp = arr[i + 1];
+		arr[i + 1] = x;
+		arr[r] = temp;
+		return i + 1;
+	}
+	//打印结果
+	public void printResult(int[] arr) {
+		for (int a : arr) {
+			System.out.print(a + " ");
+		}
+	}
+	//产生数组
+	public int[] createArray(int num) {
+		int[] arr = new int[num];
+		for (int i = 0; i < num; i++) {
+			arr[i] = (int) (Math.random() * 100);
+		}
+		return arr;
+	}
+
+}

@@ -1,0 +1,38 @@
+public class Maopao {
+	public static void main(String[] args) {
+		Maopao mp = new Maopao();
+		int[] arr = mp.createArray(10000);
+		long start = System.currentTimeMillis();
+		mp.maopao(arr);
+		long end = System.currentTimeMillis();
+		System.out.println("耗时：" + (end - start) + "毫秒");
+		//mp.printResult(arr);
+	}
+
+	public int[] maopao(int arr[]) {
+		for(int i=0 ; i<arr.length-1 ;i++){
+			for(int j=0 ;j< arr.length -i -1;j++){
+				if(arr[i]>arr[i+1]){
+					int t = arr[i];
+					arr[i] = arr[i+1];
+					arr[i+1] = t;
+				}
+			}
+		}
+		return arr;
+	}
+
+	public void printResult(int[] arr) {
+		for (int a : arr) {
+			System.out.print(a + " ");
+		}
+	}
+
+	public int[] createArray(int num) {
+		int[] arr = new int[num];
+		for (int i = 0; i < num; i++) {
+			arr[i] = (int) (Math.random() * 100);
+		}
+		return arr;
+	}
+}
